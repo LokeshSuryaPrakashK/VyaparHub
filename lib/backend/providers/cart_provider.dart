@@ -65,7 +65,12 @@ class CartProvider with ChangeNotifier {
     for (var item in _items) {
       final product = products.firstWhere((p) => p.id == item.productId,
           orElse: () => Product(
-              id: '', name: '', price: 0, description: '', merchantId: ''));
+              id: '',
+              name: '',
+              price: 0,
+              description: '',
+              merchantId: '',
+              category: ''));
       total += product.price * item.quantity;
     }
     return total;

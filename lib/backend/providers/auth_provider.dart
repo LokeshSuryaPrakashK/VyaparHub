@@ -61,10 +61,11 @@ class CustomAuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateAddress(String addressId, Address address) async {
+  Future<void> updateAddress(
+      String userId, String addressId, Address address) async {
     try {
       setLoading(true);
-      await _authService.updateAddress(addressId, address);
+      await _authService.updateAddress(userId, addressId, address);
       await fetchUserData(
           address.userId); // Refresh user data to update selectedAddressId
       setLoading(false);

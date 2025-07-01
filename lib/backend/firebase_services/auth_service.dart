@@ -34,7 +34,11 @@ class AuthService {
 
   Future<void> addAddress(String userId, Address address) async {
     try {
-      final addressRef = _firestore.collection('addresses').doc();
+      final addressRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('addresses')
+          .doc();
       final newAddress = Address(
         id: addressRef.id,
         userId: userId,
@@ -54,9 +58,12 @@ class AuthService {
     }
   }
 
-  Future<void> updateAddress(String addressId, Address address) async {
+  Future<void> updateAddress(
+      String userId, String addressId, Address address) async {
     try {
       await _firestore
+          .collection('users')
+          .doc(userId)
           .collection('addresses')
           .doc(addressId)
           .update(address.toMap());

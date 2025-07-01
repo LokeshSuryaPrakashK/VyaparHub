@@ -19,24 +19,24 @@ class NavScaffold extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => context.go('/home'),
-            child: const Text('Home', style: TextStyle(color: Colors.white)),
+            child: const Text('Home', style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: isAuthenticated
                 ? () => context.go('/cart')
                 : () => context.go('/login'),
-            child: const Text('Cart', style: TextStyle(color: Colors.white)),
+            child: const Text('Cart', style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: () => context.go('/profile'),
-            child: const Text('Profile', style: TextStyle(color: Colors.white)),
+            child: const Text('Profile', style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: isAuthenticated
                 ? () => context.go('/merchant_products')
                 : () => context.go('/login'),
             child:
-                const Text('Merchant', style: TextStyle(color: Colors.white)),
+                const Text('Merchant', style: TextStyle(color: Colors.black)),
           ),
           if (isAuthenticated)
             TextButton(
@@ -45,7 +45,7 @@ class NavScaffold extends StatelessWidget {
                 context.go('/login');
               },
               child:
-                  const Text('Logout', style: TextStyle(color: Colors.white)),
+                  const Text('Logout', style: TextStyle(color: Colors.black)),
             ),
         ],
       ),

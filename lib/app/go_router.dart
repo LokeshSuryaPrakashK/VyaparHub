@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/app/error_screen.dart';
+import 'package:vyaparhub/backend/models/product_model.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
 import 'package:vyaparhub/screens/auth/login_screen.dart';
 import 'package:vyaparhub/screens/auth/signup_screen.dart';
 import 'package:vyaparhub/screens/cart/cart_screen.dart';
 import 'package:vyaparhub/screens/home/home_screen.dart';
 import 'package:vyaparhub/screens/products/merchant_products.dart';
+import 'package:vyaparhub/screens/products/product_details.dart';
 import 'package:vyaparhub/screens/profile/profile.dart';
 import 'package:vyaparhub/widgets/scaffold.dart';
 
@@ -68,6 +70,13 @@ GoRouter createRouter(BuildContext context) {
               //   return '/error?message=Only%20merchants%20can%20access%20this%20page';
               // }
               return null;
+            },
+          ),
+          GoRoute(
+            path: '/product_details',
+            builder: (context, state) {
+              final product = state.extra as Product;
+              return ProductDetailsScreen(product: product);
             },
           ),
         ],

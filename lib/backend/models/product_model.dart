@@ -4,6 +4,8 @@ class Product {
   final String description;
   final double price;
   final String merchantId;
+  final String? productPhotoUrl;
+  final String category;
 
   Product({
     required this.id,
@@ -11,6 +13,8 @@ class Product {
     required this.description,
     required this.price,
     required this.merchantId,
+    this.productPhotoUrl,
+    required this.category,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +23,8 @@ class Product {
       'description': description,
       'price': price,
       'merchantId': merchantId,
+      'productPhotoUrl': productPhotoUrl,
+      'category': category,
     };
   }
 
@@ -32,6 +38,8 @@ class Product {
       description: map['description'] as String? ?? '',
       price: (map['price'] as num?)?.toDouble() ?? 0.0,
       merchantId: map['merchantId'] as String? ?? '',
+      productPhotoUrl: map['productPhotoUrl'] as String?,
+      category: map['category'] as String? ?? 'General',
     );
   }
 }

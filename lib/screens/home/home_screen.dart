@@ -43,24 +43,35 @@ class HomeScreenState extends State<HomeScreen> {
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  return ListTile(
-                    title: Text(product.name),
-                    subtitle: Text('\$${product.price}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.add_shopping_cart),
-                      onPressed: () async {
-                        if (!authProvider.isAuthenticated) {
-                          context.go('/login');
-                          return;
-                        }
-                        try {
-                          await cartProvider.addToCart(
-                              authProvider.userModel?.uid ?? "", product.id);
-                        } catch (e) {
-                          context.go(
-                              '/error?message=Failed%20to%20add%20to%20cart:%20$e');
-                        }
-                      },
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ListTile(
+                      leading: product.productPhotoUrl != null &&
+                              product.productPhotoUrl!.isNotEmpty
+                          ? Image.network(
+                              product.productPhotoUrl!,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.error),
+                            )
+                          : const Icon(Icons.image_not_supported),
+                      title: Text(product.name),
+                      subtitle: Text(
+                          '\$${product.price} - ${product.description}\nCategory: ${product.category}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.add_shopping_cart),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('${product.name} added to cart')),
+                          );
+                        },
+                      ),
+                      onTap: () =>
+                          context.push('/product_details', extra: product),
                     ),
                   );
                 },

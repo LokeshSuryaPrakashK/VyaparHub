@@ -21,18 +21,18 @@ class OrderService {
         'shippingAddressId': shippingAddressId,
       });
 
-      final response = await http.post(
-        Uri.parse(
-            'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/sendThankYouEmail'),
-        body: {
-          'email': email,
-          'orderId': orderRef.id,
-        },
-      );
+      // final response = await http.post(
+      //   Uri.parse(
+      //       'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/sendThankYouEmail'),
+      //   body: {
+      //     'email': email,
+      //     'orderId': orderRef.id,
+      //   },
+      // );
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to send thank-you email');
-      }
+      // if (response.statusCode != 200) {
+      //   throw Exception('Failed to send thank-you email');
+      // }
     } catch (e) {
       throw Exception('Failed to place order: $e');
     }
