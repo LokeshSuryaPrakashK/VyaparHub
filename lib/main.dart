@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         title: 'VyaparHub',
         theme: AppTheme.theme,
         debugShowCheckedModeBanner: false,
-        routerConfig: createRouter(context),
+        routerConfig: createRouter(),
       ),
     );
   }

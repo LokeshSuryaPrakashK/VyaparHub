@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,10 +10,11 @@ import 'package:vyaparhub/screens/cart/cart_screen.dart';
 import 'package:vyaparhub/screens/home/home_screen.dart';
 import 'package:vyaparhub/screens/products/merchant_products.dart';
 import 'package:vyaparhub/screens/products/product_details.dart';
+import 'package:vyaparhub/screens/products/products_screen.dart';
 import 'package:vyaparhub/screens/profile/profile.dart';
 import 'package:vyaparhub/widgets/scaffold.dart';
 
-GoRouter createRouter(BuildContext context) {
+GoRouter createRouter() {
   return GoRouter(
     initialLocation: '/login',
     errorBuilder: (context, state) => ErrorScreen(
@@ -40,10 +40,7 @@ GoRouter createRouter(BuildContext context) {
             path: '/cart',
             builder: (context, state) => const CartScreen(),
             redirect: (context, state) async {
-              final user = await context
-                  .read<CustomAuthProvider>()
-                  .authStateChanges
-                  .first;
+              final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
                 return '/login';
               }
@@ -58,14 +55,13 @@ GoRouter createRouter(BuildContext context) {
             path: '/merchant_products',
             builder: (context, state) => const MerchantProductScreen(),
             redirect: (context, state) async {
-              final user = await context
-                  .read<CustomAuthProvider>()
-                  .authStateChanges
-                  .first;
+              final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
                 return '/login';
               }
-              // final userModel = await context.read<CustomAuthProvider>().fetchUserData(user.uid);
+              final userModel = await context
+                  .read<CustomAuthProvider>()
+                  .fetchUserData(user.uid);
               // if (userModel == null || userModel.isUser) {
               //   return '/error?message=Only%20merchants%20can%20access%20this%20page';
               // }
@@ -79,12 +75,17 @@ GoRouter createRouter(BuildContext context) {
               return ProductDetailsScreen(product: product);
             },
           ),
+          GoRoute(
+            path: '/products',
+            builder: (context, state) {
+              return ProductScreen();
+            },
+          ),
         ],
       ),
     ],
     redirect: (context, state) async {
-      final user =
-          await context.read<CustomAuthProvider>().authStateChanges.first;
+      final user = FirebaseAuth.instance.currentUser;
       final isAuthRoute = state.matchedLocation == '/login' ||
           state.matchedLocation == '/signup';
       if (user == null && !isAuthRoute) {
