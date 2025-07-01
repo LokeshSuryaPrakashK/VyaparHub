@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
-import 'package:vyaparhub/backend/providers/user_provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -21,7 +20,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
     Provider.of<CustomAuthProvider>(context, listen: false);
-    Provider.of<UserModelProvider>(context, listen: false);
     FirebaseAuth.instance.currentUser;
   }
 
@@ -32,15 +30,14 @@ class SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-  Future<void> _handleSignUp(
-      CustomAuthProvider authProvider, UserModelProvider userProvider) async {
+  Future<void> _handleSignUp(CustomAuthProvider authProvider) async {
     try {
       await authProvider.signUp(
           _emailController.text, _passwordController.text, !_isMerchant);
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await userProvider.fetchUserData(user.uid);
-        await userProvider.fetchAddresses(user.uid);
+        await authProvider.fetchUserData(user.uid);
+        await authProvider.fetchAddresses(user.uid);
       }
       context.go('/home');
     } catch (e) {
@@ -51,7 +48,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<CustomAuthProvider>(context);
-    final userProvider = Provider.of<UserModelProvider>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
@@ -77,12 +73,12 @@ class SignUpScreenState extends State<SignUpScreen> {
                 });
               },
             ),
-            if (authProvider.isLoading || userProvider.isLoading)
+            if (authProvider.isLoading || authProvider.isLoading)
               const CircularProgressIndicator(),
             ElevatedButton(
-              onPressed: authProvider.isLoading || userProvider.isLoading
+              onPressed: authProvider.isLoading || authProvider.isLoading
                   ? null
-                  : () => _handleSignUp(authProvider, userProvider),
+                  : () => _handleSignUp(authProvider),
               child: const Text('Sign Up'),
             ),
             TextButton(

@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/backend/models/product_model.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
 import 'package:vyaparhub/backend/providers/product_provider.dart';
-import 'package:vyaparhub/backend/providers/user_provider.dart';
 
 class MerchantProductScreen extends StatefulWidget {
   const MerchantProductScreen({super.key});
@@ -24,7 +23,6 @@ class MerchantProductScreenState extends State<MerchantProductScreen> {
   void initState() {
     super.initState();
     Provider.of<CustomAuthProvider>(context, listen: false);
-    Provider.of<UserModelProvider>(context, listen: false);
     Provider.of<ProductProvider>(context, listen: false);
     FirebaseAuth.instance.currentUser;
   }
@@ -36,7 +34,7 @@ class MerchantProductScreenState extends State<MerchantProductScreen> {
         Provider.of<CustomAuthProvider>(context, listen: false);
     authProvider.authStateChanges.listen((user) {
       if (user != null && mounted) {
-        Provider.of<UserModelProvider>(context, listen: false)
+        Provider.of<CustomAuthProvider>(context, listen: false)
             .fetchUserData(user.uid);
         Provider.of<ProductProvider>(context, listen: false).fetchProducts();
       } else if (user == null) {
@@ -56,7 +54,7 @@ class MerchantProductScreenState extends State<MerchantProductScreen> {
   Future<void> _addOrUpdateProduct(ProductProvider productProvider) async {
     final user = FirebaseAuth.instance.currentUser!;
     final userModel =
-        Provider.of<UserModelProvider>(context, listen: false).userModel;
+        Provider.of<CustomAuthProvider>(context, listen: false).userModel;
     if (userModel == null || userModel.isUser) {
       context.go('/error?message=Only%20merchants%20can%20manage%20products');
       return;
@@ -110,7 +108,7 @@ class MerchantProductScreenState extends State<MerchantProductScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<CustomAuthProvider>(context);
-    final userProvider = Provider.of<UserModelProvider>(context);
+    final userProvider = Provider.of<CustomAuthProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
     final userModel = userProvider.userModel;
     final products = productProvider.products;

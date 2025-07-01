@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
-import 'package:vyaparhub/backend/providers/user_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +19,6 @@ class LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     Provider.of<CustomAuthProvider>(context, listen: false);
-    Provider.of<UserModelProvider>(context, listen: false);
     FirebaseAuth.instance.currentUser;
   }
 
@@ -31,15 +29,14 @@ class LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleSignIn(
-      CustomAuthProvider authProvider, UserModelProvider userProvider) async {
+  Future<void> _handleSignIn(CustomAuthProvider authProvider) async {
     try {
       await authProvider.signIn(
           _emailController.text, _passwordController.text);
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await userProvider.fetchUserData(user.uid);
-        await userProvider.fetchAddresses(user.uid);
+        await authProvider.fetchUserData(user.uid);
+        await authProvider.fetchAddresses(user.uid);
       }
       context.go('/home');
     } catch (e) {
@@ -50,7 +47,6 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<CustomAuthProvider>(context);
-    final userProvider = Provider.of<UserModelProvider>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
@@ -67,12 +63,12 @@ class LoginScreenState extends State<LoginScreen> {
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            if (authProvider.isLoading || userProvider.isLoading)
+            if (authProvider.isLoading || authProvider.isLoading)
               const CircularProgressIndicator(),
             ElevatedButton(
-              onPressed: authProvider.isLoading || userProvider.isLoading
+              onPressed: authProvider.isLoading || authProvider.isLoading
                   ? null
-                  : () => _handleSignIn(authProvider, userProvider),
+                  : () => _handleSignIn(authProvider),
               child: const Text('Sign In'),
             ),
             TextButton(

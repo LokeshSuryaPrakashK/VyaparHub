@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/backend/models/address_model.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
-import 'package:vyaparhub/backend/providers/user_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -26,7 +25,6 @@ class ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     Provider.of<CustomAuthProvider>(context, listen: false);
-    Provider.of<UserModelProvider>(context, listen: false);
     FirebaseAuth.instance.currentUser;
   }
 
@@ -37,9 +35,9 @@ class ProfileScreenState extends State<ProfileScreen> {
         Provider.of<CustomAuthProvider>(context, listen: false);
     authProvider.authStateChanges.listen((user) {
       if (user != null && mounted) {
-        Provider.of<UserModelProvider>(context, listen: false)
+        Provider.of<CustomAuthProvider>(context, listen: false)
             .fetchUserData(user.uid);
-        Provider.of<UserModelProvider>(context, listen: false)
+        Provider.of<CustomAuthProvider>(context, listen: false)
             .fetchAddresses(user.uid);
       }
     });
@@ -66,7 +64,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _addOrUpdateAddress(UserModelProvider userProvider) async {
+  Future<void> _addOrUpdateAddress(CustomAuthProvider userProvider) async {
     final user = FirebaseAuth.instance.currentUser!;
     final address = Address(
       id: _editingAddressId ?? '',
@@ -114,7 +112,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<CustomAuthProvider>(context);
-    final userProvider = Provider.of<UserModelProvider>(context);
+    final userProvider = Provider.of<CustomAuthProvider>(context);
     final userModel = userProvider.userModel;
     final addresses = userProvider.addresses;
 

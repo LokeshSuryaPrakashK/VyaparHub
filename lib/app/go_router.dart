@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vyaparhub/app/error_screen.dart';
 import 'package:vyaparhub/backend/providers/auth_provider.dart';
-import 'package:vyaparhub/backend/providers/user_provider.dart';
 import 'package:vyaparhub/screens/auth/login_screen.dart';
 import 'package:vyaparhub/screens/auth/signup_screen.dart';
 import 'package:vyaparhub/screens/cart/cart_screen.dart';
 import 'package:vyaparhub/screens/home/home_screen.dart';
 import 'package:vyaparhub/screens/products/merchant_products.dart';
 import 'package:vyaparhub/screens/profile/profile.dart';
+import 'package:vyaparhub/widgets/scaffold.dart';
 
 GoRouter createRouter(BuildContext context) {
   return GoRouter(
@@ -27,42 +27,50 @@ GoRouter createRouter(BuildContext context) {
         path: '/signup',
         builder: (context, state) => const SignUpScreen(),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
-        path: '/cart',
-        builder: (context, state) => const CartScreen(),
-        redirect: (context, state) async {
-          final user =
-              await context.read<CustomAuthProvider>().authStateChanges.first;
-          if (user == null) {
-            return '/login';
-          }
-          return null;
-        },
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
-      ),
-      GoRoute(
-        path: '/merchant_products',
-        builder: (context, state) => const MerchantProductScreen(),
-        redirect: (context, state) async {
-          final user =
-              await context.read<CustomAuthProvider>().authStateChanges.first;
-          if (user == null) {
-            return '/login';
-          }
-          // final userModel =
-          //     await context.read<UserModelProvider>().fetchUserData(user.uid);
-          // if (userModel == null || userModel.isUser) {
-          //   return '/error?message=Only%20merchants%20can%20access%20this%20page';
-          // }
-          // return null;
-        },
+      ShellRoute(
+        builder: (context, state, child) => NavScaffold(child: child),
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/cart',
+            builder: (context, state) => const CartScreen(),
+            redirect: (context, state) async {
+              final user = await context
+                  .read<CustomAuthProvider>()
+                  .authStateChanges
+                  .first;
+              if (user == null) {
+                return '/login';
+              }
+              return null;
+            },
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+          GoRoute(
+            path: '/merchant_products',
+            builder: (context, state) => const MerchantProductScreen(),
+            redirect: (context, state) async {
+              final user = await context
+                  .read<CustomAuthProvider>()
+                  .authStateChanges
+                  .first;
+              if (user == null) {
+                return '/login';
+              }
+              // final userModel = await context.read<CustomAuthProvider>().fetchUserData(user.uid);
+              // if (userModel == null || userModel.isUser) {
+              //   return '/error?message=Only%20merchants%20can%20access%20this%20page';
+              // }
+              return null;
+            },
+          ),
+        ],
       ),
     ],
     redirect: (context, state) async {
