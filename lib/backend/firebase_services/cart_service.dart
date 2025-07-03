@@ -64,4 +64,28 @@ class CartService {
           .toList();
     });
   }
+
+  Future<void> updateCart(String userId, String productId, int quantity) async {
+    final cartRef = _firestore.collection('cart').doc(userId);
+    final cartDoc = await cartRef.get();
+    if (!cartDoc.exists) return;
+
+    List<CartItem> items = (cartDoc.data()!['items'] as List<dynamic>)
+        .map((item) => CartItem.fromMap(item))
+        .toList();
+    final existingItemIndex =
+        items.indexWhere((item) => item.productId == productId);
+
+    if (existingItemIndex >= 0) {
+      if (quantity <= 0) {
+        items.removeAt(existingItemIndex);
+      } else {
+        items[existingItemIndex].quantity = quantity;
+      }
+      await cartRef.set({
+        'userId': userId,
+        'items': items.map((item) => item.toMap()).toList(),
+      });
+    }
+  }
 }

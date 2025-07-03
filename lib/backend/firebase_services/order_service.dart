@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' as http;
 
 class OrderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -8,6 +7,7 @@ class OrderService {
     String userId,
     Map<String, int> items,
     double total,
+    String paymentMethod,
     String email, {
     required String shippingAddressId,
   }) async {
@@ -19,6 +19,7 @@ class OrderService {
         'total': total,
         'createdAt': FieldValue.serverTimestamp(),
         'shippingAddressId': shippingAddressId,
+        'paymentMethod': paymentMethod,
       });
 
       // final response = await http.post(

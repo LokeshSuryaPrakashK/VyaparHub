@@ -7,6 +7,7 @@ import 'package:vyaparhub/backend/providers/auth_provider.dart';
 import 'package:vyaparhub/screens/auth/login_screen.dart';
 import 'package:vyaparhub/screens/auth/signup_screen.dart';
 import 'package:vyaparhub/screens/cart/cart_screen.dart';
+import 'package:vyaparhub/screens/cart/widgets/address_form.dart';
 import 'package:vyaparhub/screens/home/home_screen.dart';
 import 'package:vyaparhub/screens/products/merchant_products.dart';
 import 'package:vyaparhub/screens/products/product_details.dart';
@@ -54,19 +55,6 @@ GoRouter createRouter() {
           GoRoute(
             path: '/merchant_products',
             builder: (context, state) => const MerchantProductScreen(),
-            redirect: (context, state) async {
-              final user = FirebaseAuth.instance.currentUser;
-              if (user == null) {
-                return '/login';
-              }
-              final userModel = await context
-                  .read<CustomAuthProvider>()
-                  .fetchUserData(user.uid);
-              // if (userModel == null || userModel.isUser) {
-              //   return '/error?message=Only%20merchants%20can%20access%20this%20page';
-              // }
-              return null;
-            },
           ),
           GoRoute(
             path: '/product_details',
@@ -74,6 +62,10 @@ GoRouter createRouter() {
               final product = state.extra as Product;
               return ProductDetailsScreen(product: product);
             },
+          ),
+          GoRoute(
+            path: '/add-address',
+            builder: (context, state) => const AddressFormScreen(),
           ),
           GoRoute(
             path: '/products',

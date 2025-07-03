@@ -18,12 +18,13 @@ class OrderProvider with ChangeNotifier {
     String userId,
     Map<String, int> items,
     double total,
+    String paymentMethod,
     String email, {
     required String shippingAddressId,
   }) async {
     try {
       setLoading(true);
-      await _orderService.placeOrder(userId, items, total, email,
+      await _orderService.placeOrder(userId, items, total, email, paymentMethod,
           shippingAddressId: shippingAddressId);
       setLoading(false);
     } catch (e) {

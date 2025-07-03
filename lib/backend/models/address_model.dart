@@ -1,5 +1,5 @@
 class Address {
-  final String id;
+  final String? id;
   final String userId;
   final String street;
   final String city;
@@ -9,7 +9,7 @@ class Address {
   final bool isDefault;
 
   Address({
-    required this.id,
+    this.id,
     required this.userId,
     required this.street,
     required this.city,
@@ -21,7 +21,6 @@ class Address {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'userId': userId,
       'street': street,
       'city': city,

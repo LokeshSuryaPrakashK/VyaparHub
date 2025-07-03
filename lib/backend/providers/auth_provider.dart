@@ -38,12 +38,22 @@ class CustomAuthProvider with ChangeNotifier {
     try {
       setLoading(true);
       _authService.getAddresses(userId).listen((addresses) {
+        // debugPrint(
+        //     'Fetched ${addresses.length} addresses: ${addresses.map((a) => a.toMap()).toList()}');
         _addresses = addresses;
-        _isLoading = false;
+        setLoading(false);
+        notifyListeners();
+      }, onError: (e) {
+        // debugPrint('Error in address stream: $e');
+        _addresses = [];
+        setLoading(false);
         notifyListeners();
       });
     } catch (e) {
+      // debugPrint('Error fetching addresses: $e');
+      _addresses = [];
       setLoading(false);
+      notifyListeners();
       throw Exception('Failed to fetch addresses: $e');
     }
   }
@@ -52,6 +62,7 @@ class CustomAuthProvider with ChangeNotifier {
     try {
       setLoading(true);
       await _authService.addAddress(userId, address);
+      print('Address added: ${address.toMap()}');
       await fetchUserData(
           userId); // Refresh user data to update selectedAddressId
       setLoading(false);

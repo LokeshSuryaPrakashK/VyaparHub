@@ -98,6 +98,8 @@ class AuthService {
 
   Stream<List<Address>> getAddresses(String userId) {
     return _firestore
+        .collection('users')
+        .doc(userId)
         .collection('addresses')
         .where('userId', isEqualTo: userId)
         .snapshots()

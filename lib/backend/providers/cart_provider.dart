@@ -48,6 +48,17 @@ class CartProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateCart(String userId, String productId, int quantity) async {
+    setLoading(true);
+    try {
+      await _cartService.updateCart(userId, productId, quantity);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      throw e;
+    }
+  }
+
   Future<void> clearCart(String userId) async {
     setLoading(true);
     try {
